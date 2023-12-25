@@ -8,8 +8,11 @@ import com.notme.second.universal.DatabaseDataObject;
  **/
 public class User extends DatabaseDataObject {
 
-    // 用户Id
+    // 主键，占多几个字节，加快添加速度
     private Long id;
+
+    // 用户Id，用于业务
+    private String userId;
 
     // 用户密码（加密后）
     private String pwd;

@@ -8,6 +8,9 @@ import com.notme.second.universal.DatabaseDataObject;
  **/
 public class UserInfo extends DatabaseDataObject {
 
+    // 主键Id
+    private Long id;
+
     // 人造外键
     private String userId;
 
