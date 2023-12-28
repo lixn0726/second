@@ -15,7 +15,7 @@ public class Mq {
         return new Mq(topic);
     }
 
-    private Mq(String topic) {
+    public Mq(String topic) {
         this(generateId(), topic);
     }
 

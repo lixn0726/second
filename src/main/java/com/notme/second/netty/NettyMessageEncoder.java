@@ -23,10 +23,8 @@ public class NettyMessageEncoder extends MessageToByteEncoder<Message>
     @Override
     protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) {
         if (cannotWriteToBuffer(msg, out)) {
-            System.out.println("Cannot write msg to buffer, stop.");
             return;
         }
-        System.out.println("Can write msg to buffer, go on.");
         encodeAndWrite(msg, out);
     }
 
@@ -42,9 +40,7 @@ public class NettyMessageEncoder extends MessageToByteEncoder<Message>
     }
 
     private boolean canWriteToBuffer(Message msg, ByteBuf out) {
-        int requireSize = Message.requireBufferSizeToWrite(msg);
-        System.out.println("Require size: " + requireSize);
-        return out.isWritable(requireSize);
+        return out.isWritable(Message.requireBufferSizeToWrite(msg));
     }
 
     // not allow to direct call encode()

@@ -13,8 +13,8 @@ public class ShowMsgHandler extends SimpleChannelInboundHandler<Message> {
     protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
         if (checkMsgType(msg)) {
             System.out.println("Received msg from:" + ctx.channel().remoteAddress().toString() + "\n" +
-                    "          content:" + msg + "\n" +
-                    "               at:" + System.currentTimeMillis());
+                    "content          :" + msg + "\n" +
+                    "at               :" + System.currentTimeMillis());
         } else {
             System.err.println("Received illegal type of msg: " + msg.getClass().getName());
         }

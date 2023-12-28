@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Predicate;
 
 /**
  * @author listen
@@ -15,19 +16,38 @@ public class Mqs {
 
     private final List<String> topics = new ArrayList<>();
 
-    // 由于这里 duplicate argument class，后续我可能会将 Id给封装成一个类
-    public static Mq fetchMqById(Mqs mqs, String id) {
-        for (Mq mq : mqs.mqs) {
-            if (id.equals(mq.getId())) {
-                return mq;
-            }
+    static class ChildMq extends Mq {
+
+        public ChildMq(String topic) {
+            super(topic);
         }
-        return null;
+
+        public String getChildId() { return ""; }
     }
 
-    public static Mq fetchMqByTopic(Mqs mqs, String topic) {
+    public static void main(String[] args) {
+        Mqs mqs = new Mqs();
+    }
+
+    /*
+    参考 Code Aesthetic - Dear Function
+            PECS: Producer Extends, Consumer Super
+            Arg: filterPredicate is a consumer, so not suitable for a Extends
+    todo: what about a Function creates a Function.
+            Like:  function userIdEquals(userId) {
+                        return function(receipt) {
+                            return receipt.userId == userId;
+                        }
+                    }
+    Tryna understand this and change the use case of method: fetchMq( // that's todo // )
+     */
+    public static Mq fetchMq(Mqs mqs, Predicate<? super Mq> filterPredicate) {
+        return fetchFirstMqOrdered(mqs, filterPredicate);
+    }
+
+    private static Mq fetchFirstMqOrdered(Mqs mqs, Predicate<? super Mq> filterPredicate) {
         for (Mq mq : mqs.mqs) {
-            if (topic.equals(mq.getId())) {
+            if (filterPredicate.test(mq)) {
                 return mq;
             }
         }
@@ -41,7 +61,7 @@ public class Mqs {
 
     // only expose this
     public boolean addTopic(String topic) {
-        final Mq mq = fetchMqByTopic(this, topic);
+        final Mq mq = fetchMq(this, m -> topic.equals(m.getTopic()));
         if (Objects.isNull(mq)) {
             return addMq(Mq.withRandomId(topic));
         }
@@ -55,7 +75,7 @@ public class Mqs {
     }
 
     public boolean removeTopic(String topic) {
-        final Mq mq = fetchMqByTopic(this, topic);
+        final Mq mq = fetchMq(this, m -> topic.equals(m.getTopic()));
         if (Objects.isNull(mq)) {
             return false;
         }
