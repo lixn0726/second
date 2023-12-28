@@ -45,10 +45,21 @@
             <artifactId>netty-all</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+        </dependency>
+
     </dependencies>
     <dependencyManagement>
 
         <dependencies>
+
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>2.0.42</version>
+            </dependency>
 
             <dependency>
                 <groupId>io.netty</groupId>

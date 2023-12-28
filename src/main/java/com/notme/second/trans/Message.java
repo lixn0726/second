@@ -1,13 +1,18 @@
 package com.notme.second.trans;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 /**
  * @author listen
  **/
-@Data
+@Getter
+@Setter
 public class Message implements Serializable {
 
     private static final long serialVersionUID = -12345654321L;
@@ -88,4 +93,13 @@ public class Message implements Serializable {
 
     }
 
+    @Override
+    public String toString() {
+        return "Message{" +
+                "magicNumber=" + magicNumber +
+                ", bodyLength=" + bodyLength +
+                ", bizCode=" + bizCode +
+                ", body(String Version)= [" + new String(body, StandardCharsets.UTF_8) +
+                "] }";
+    }
 }
