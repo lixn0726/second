@@ -11,8 +11,9 @@ import io.netty.handler.codec.MessageToByteEncoder;
  * @author listen
  **/
 public class NettyMessageEncoder extends MessageToByteEncoder<Message> implements Encoder<ByteBuf, Message> {
+
     @Override
-    protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) {
         if (cannotWriteToBuffer(msg, out)) {
             return;
         }
@@ -34,8 +35,10 @@ public class NettyMessageEncoder extends MessageToByteEncoder<Message> implement
         return out.isWritable(Message.requireBufferSizeToWrite(msg));
     }
 
+    // not allow to direct call encode()
     @Override
     public ByteBuf encode(Message source) throws MessageCodecException {
-        throw new MessageCodecException();
+        throw MessageCodecException.processingExceptionFor("Cannot directly encode msg to class Netty#ByteBuf");
+//        throw new UnsupportedOperationException();
     }
 }

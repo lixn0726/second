@@ -1,10 +1,14 @@
 package com.notme.second.common.reader;
 
+import java.util.Properties;
+
 /**
  * @author listen
  **/
-public class Resource {
+public abstract class Resource {
 
 
+
+    protected abstract Properties toProperties();
 
 }

@@ -1,4 +1,4 @@
-package com.notme.second.universal.services.user.po;
+package com.notme.second.universal.po;
 
 import com.notme.second.universal.DatabaseDataObject;
 

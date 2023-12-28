@@ -36,14 +36,13 @@ public class NettyMessageDecoder extends ByteToMessageDecoder implements Decoder
         in.markReaderIndex();
         byte magicNumber = in.readByte();
         if (Message.notLegalMagicNumber(magicNumber)) {
-            throw new MessageCodecException();
+            throw MessageCodecException.preprocessingExceptionFor("Income msg is not a legal msg.");
         }
         int length = in.readInt();
         if (readableBytesLessThanReadLength(length, in)) {
             // 不够，重置读指针，返回
-            // todo 这里不同的情况返回不同code的Exception
             in.resetReaderIndex();
-            throw new MessageCodecException();
+            throw MessageCodecException.preprocessingExceptionFor("Msg body is not long enough.");
         }
         byte[] body = new byte[length];
         in.readBytes(body);
