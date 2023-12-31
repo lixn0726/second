@@ -3,7 +3,7 @@ package com.notme.second.universal.po;
 import com.notme.second.universal.DatabaseDataObject;
 
 /**
- * @author listen
+ * @author monstaxl
  * 作为读多写少的数据封装而存在，唯一标志一名记录在库的用户
  **/
 public class User extends DatabaseDataObject {

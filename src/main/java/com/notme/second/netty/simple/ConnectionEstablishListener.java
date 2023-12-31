@@ -7,7 +7,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.nio.channels.SocketChannel;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public class ConnectionEstablishListener extends ChannelInboundHandlerAdapter {
 

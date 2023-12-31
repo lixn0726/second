@@ -4,7 +4,7 @@ import com.notme.second.common.exception.enums.CodecErrorCode;
 import lombok.Getter;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 @Getter
 public class MessageCodecException extends RuntimeException {

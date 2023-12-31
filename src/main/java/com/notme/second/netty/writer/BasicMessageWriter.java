@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public abstract class BasicMessageWriter<T> implements MessageWriter<T> {
 

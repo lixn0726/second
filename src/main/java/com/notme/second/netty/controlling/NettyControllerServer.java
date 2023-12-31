@@ -3,8 +3,8 @@ package com.notme.second.netty.controlling;
 import com.notme.second.common.logger.Log;
 import com.notme.second.common.logger.LoggerFactory;
 import com.notme.second.netty.NettyEnvironment;
-import com.notme.second.netty.NettyMessageDecoder;
-import com.notme.second.netty.NettyMessageEncoder;
+import com.notme.second.architecture.communication.defaults.netty.codec.NettyMessageDecoder;
+import com.notme.second.architecture.communication.defaults.netty.codec.NettyMessageEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -19,7 +19,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public class NettyControllerServer {
 

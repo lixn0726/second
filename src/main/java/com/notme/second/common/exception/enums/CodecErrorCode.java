@@ -3,7 +3,7 @@ package com.notme.second.common.exception.enums;
 import lombok.Getter;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 @Getter
 public enum CodecErrorCode {

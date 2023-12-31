@@ -1,7 +1,8 @@
 package com.notme.second.netty.simple;
 
-import com.notme.second.netty.NettyMessageDecoder;
-import com.notme.second.netty.NettyMessageEncoder;
+import com.notme.second.architecture.communication.defaults.netty.codec.NettyMessageDecoder;
+import com.notme.second.architecture.communication.defaults.netty.codec.NettyMessageEncoder;
+import com.notme.second.architecture.communication.defaults.netty.handler.NettyServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -10,7 +11,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public class SimpleNettyServer {
 
@@ -49,6 +50,7 @@ public class SimpleNettyServer {
                                 ChannelPipeline pipeline = ch.pipeline();
                                 pipeline.addLast(new NettyMessageEncoder());
                                 pipeline.addLast(new NettyMessageDecoder());
+                                pipeline.addLast(new NettyServerHandler());
                                 pipeline.addLast(new EchoMsgHandler());
                             }
                         });

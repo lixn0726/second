@@ -3,7 +3,7 @@ package com.notme.second.domain;
 import com.sun.xml.internal.bind.v2.schemagen.xmlschema.TopLevelAttribute;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public class Mq {
 

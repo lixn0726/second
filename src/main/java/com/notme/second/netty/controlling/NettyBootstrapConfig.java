@@ -3,7 +3,7 @@ package com.notme.second.netty.controlling;
 import lombok.Data;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 @Data
 public class NettyBootstrapConfig {

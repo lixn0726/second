@@ -3,7 +3,7 @@ package com.notme.second.common.ds;
 import lombok.Getter;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 @Getter
 public class KeyValue<Key, Value> {

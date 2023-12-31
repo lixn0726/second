@@ -3,7 +3,7 @@ package com.notme.second.netty.writer;
 import com.notme.second.trans.Message;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public interface MessageWriter<T> {
 

@@ -3,7 +3,7 @@ package com.notme.second.common;
 import com.notme.second.common.exception.MessageCodecException;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public interface Decoder<S, T> {
 

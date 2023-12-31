@@ -1,7 +1,7 @@
 package com.notme.second.universal;
 
 /**
- * @author listen
+ * @author monstaxl
  * 数据库数据类，封装通用的数据
  **/
 public class DatabaseDataObject {

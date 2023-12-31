@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public class ActiveMqProducers {
 

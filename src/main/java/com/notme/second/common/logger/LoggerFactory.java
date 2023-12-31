@@ -1,7 +1,7 @@
 package com.notme.second.common.logger;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public class LoggerFactory {
 

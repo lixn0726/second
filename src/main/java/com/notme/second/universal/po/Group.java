@@ -1,7 +1,7 @@
 package com.notme.second.universal.po;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public class Group {
 

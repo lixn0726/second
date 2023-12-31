@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 @Data
 public final class MessageQueue implements Serializable {

@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @author listen
+ * @author monstaxl
  * Bounding server main thread channel.
  **/
 public class ConnectionManager implements ChannelInboundHandler {

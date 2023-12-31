@@ -3,7 +3,7 @@ package com.notme.second.trans;
 import lombok.Data;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 @Data
 public class MessageBody<T> {

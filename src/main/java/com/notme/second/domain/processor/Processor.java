@@ -1,10 +1,14 @@
 package com.notme.second.domain.processor;
 
+import com.notme.second.domain.event.Event;
+
 /**
- * @author listen
+ * @author monstaxl
  **/
 public interface Processor {
 
-    String interestingCommand();
+    Event interestingEvent();
+
+    void process(Event event);
 
 }

@@ -3,7 +3,7 @@ package com.notme.second.universal.po;
 import com.notme.second.universal.DatabaseDataObject;
 
 /**
- * @author listen
+ * @author monstaxl
  * 用户信息，读多写多的属性
  **/
 public class UserInfo extends DatabaseDataObject {

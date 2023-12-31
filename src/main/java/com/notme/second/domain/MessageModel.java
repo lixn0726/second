@@ -1,9 +1,9 @@
 package com.notme.second.domain;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
-public interface DMessage {
+public interface MessageModel {
 
     String id();
 

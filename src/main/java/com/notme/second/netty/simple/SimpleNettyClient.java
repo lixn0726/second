@@ -1,7 +1,7 @@
 package com.notme.second.netty.simple;
 
-import com.notme.second.netty.NettyMessageDecoder;
-import com.notme.second.netty.NettyMessageEncoder;
+import com.notme.second.architecture.communication.defaults.netty.codec.NettyMessageDecoder;
+import com.notme.second.architecture.communication.defaults.netty.codec.NettyMessageEncoder;
 import com.notme.second.trans.Message;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
@@ -12,12 +12,12 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public class SimpleNettyClient {
 
     public static void main(String[] args) {
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 2; i++) {
             new Thread(() -> SimpleNettyClient.connect(7777)).start();
         }
     }

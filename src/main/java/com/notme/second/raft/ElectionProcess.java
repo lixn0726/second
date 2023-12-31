@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public class ElectionProcess {
 

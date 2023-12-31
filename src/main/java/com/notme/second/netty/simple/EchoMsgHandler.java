@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public class EchoMsgHandler extends SimpleChannelInboundHandler<Message> {
 

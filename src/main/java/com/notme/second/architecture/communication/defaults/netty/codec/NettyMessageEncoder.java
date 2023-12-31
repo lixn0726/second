@@ -1,4 +1,4 @@
-package com.notme.second.netty;
+package com.notme.second.architecture.communication.defaults.netty.codec;
 
 import com.notme.second.common.Encoder;
 import com.notme.second.common.exception.MessageCodecException;
@@ -8,7 +8,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public class NettyMessageEncoder extends MessageToByteEncoder<Message>
 //        implements Encoder<ByteBuf, Message>

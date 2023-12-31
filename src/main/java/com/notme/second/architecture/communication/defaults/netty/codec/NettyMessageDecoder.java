@@ -1,4 +1,4 @@
-package com.notme.second.netty;
+package com.notme.second.architecture.communication.defaults.netty.codec;
 
 import com.notme.second.common.Decoder;
 import com.notme.second.common.exception.MessageCodecException;
@@ -10,7 +10,7 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import java.util.List;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public class NettyMessageDecoder extends ByteToMessageDecoder implements Decoder<ByteBuf, Message> {
 

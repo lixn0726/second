@@ -1,7 +1,7 @@
 package com.notme.second.domain.event;
 
 /**
- * @author listen
+ * @author monstaxl
  **/
 public interface Command {
 }
