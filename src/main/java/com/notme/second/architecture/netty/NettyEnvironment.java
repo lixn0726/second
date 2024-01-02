@@ -19,8 +19,7 @@ public class NettyEnvironment {
     }
 
     public static int workerEventLoopThreadNumber() {
-        return Math.max(HostMachineOperationSystem.availableProcessors() >> 1,
-                );
+        return Math.max(HostMachineOperationSystem.availableProcessors() >> 1, 3);
     }
 
     // helper classes below
