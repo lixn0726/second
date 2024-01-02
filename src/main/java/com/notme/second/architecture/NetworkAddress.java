@@ -3,6 +3,8 @@ package com.notme.second.architecture;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.function.Function;
 
 /**
@@ -19,12 +21,19 @@ public class NetworkAddress implements Serializable {
 
     private final String ip;
 
-    /** 不使用int是为了避免出现默认int属性为0的情况导致发生意料之外的错误 */
+    /**
+     * 不使用int是为了避免出现默认int属性为0的情况导致发生意料之外的错误
+     */
     private final Integer port;
 
     public NetworkAddress(String ip, Integer port) {
         this.ip = ip;
         this.port = port;
+    }
+
+    public static NetworkAddress fromSocketAddress(final SocketAddress sa) {
+        InetSocketAddress isa = (InetSocketAddress) sa;
+        return new NetworkAddress(isa.getHostString(), isa.getPort());
     }
 
     public String get() {
