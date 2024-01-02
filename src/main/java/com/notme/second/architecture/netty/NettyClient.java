@@ -2,6 +2,7 @@ package com.notme.second.architecture.netty;
 
 import com.notme.second.architecture.NetworkAddress;
 import com.notme.second.architecture.apis.transport.Client;
+import com.notme.second.architecture.apis.transport.basic.AbstractEndpoint;
 import com.notme.second.architecture.netty.codec.NettyMessageDecoder;
 import com.notme.second.architecture.netty.codec.NettyMessageEncoder;
 import com.notme.second.architecture.netty.common.handler.ShowMsgHandler;
@@ -15,7 +16,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 /**
  * @author monstaxl
  **/
-public class NettyClient implements Client {
+public class NettyClient extends AbstractEndpoint implements Client {
 
     private NetworkAddress address;
 
@@ -24,6 +25,10 @@ public class NettyClient implements Client {
     private EventLoopGroup worker = new NioEventLoopGroup();
 
     private volatile Channel channel;
+
+    public NettyClient(NetworkAddress address) {
+        super(address);
+    }
 
     @Override
     public void connect(NetworkAddress address) {
