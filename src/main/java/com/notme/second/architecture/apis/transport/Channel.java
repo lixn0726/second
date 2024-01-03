@@ -5,13 +5,19 @@ import com.notme.second.architecture.NetworkAddress;
 /**
  * @author monstaxl
  **/
-public interface Channel {
+public interface Channel extends Endpoint {
 
     NetworkAddress remoteAddress();
 
     boolean isConnecting();
 
-    void send(Object msg);
+    boolean isConnected();
+
+    boolean isDisconnecting();
+
+    boolean isDisconnected();
+
+    boolean isActive();
 
     void send(Object msg, boolean async);
 

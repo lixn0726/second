@@ -10,7 +10,7 @@ public abstract class AbstractEndpoint implements Endpoint {
 
     protected final String id;
 
-    protected final NetworkAddress address;
+    protected volatile NetworkAddress address;
 
     protected volatile boolean closed = true;
 
@@ -36,4 +36,11 @@ public abstract class AbstractEndpoint implements Endpoint {
         return address;
     }
 
+    protected void setAddress(NetworkAddress address) {
+        this.address = address;
+    }
+
+    protected void setClosed(boolean closed) {
+        this.closed = closed;
+    }
 }

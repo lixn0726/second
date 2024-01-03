@@ -1,22 +1,27 @@
 package com.notme.second.architecture.netty;
 
 import com.notme.second.architecture.NetworkAddress;
+import com.notme.second.architecture.apis.transport.Channel;
 import com.notme.second.architecture.apis.transport.Server;
 import com.notme.second.architecture.apis.transport.basic.AbstractEndpoint;
 import com.notme.second.architecture.netty.codec.NettyMessageDecoder;
 import com.notme.second.architecture.netty.codec.NettyMessageEncoder;
-import com.notme.second.architecture.netty.common.handler.EchoMsgHandler;
-import com.notme.second.architecture.netty.handler.NettyServerHandler;
+import com.notme.second.architecture.netty.common.NettyConstants;
+import com.notme.second.architecture.netty.common.NettyResources;
+import com.notme.second.architecture.netty.handler.NettyChannelManager;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.*;
-import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 /**
@@ -25,9 +30,15 @@ import java.util.function.Predicate;
  **/
 public class NettyServer extends AbstractEndpoint implements Server {
 
+    private static final Logger log = LoggerFactory.getLogger(NettyServer.class);
+
+    // static fields and functions
+
     private static final boolean useEpoll = NettyEnvironment.useEpoll();
 
-    private final NettyServerHandler nettyServerHandler = new NettyServerHandler();
+    // object fields
+
+    private final NettyChannelManager nettyChannelManager = new NettyChannelManager();
 
     private final ServerBootstrap serverBootstrap = new ServerBootstrap();
 
@@ -35,12 +46,23 @@ public class NettyServer extends AbstractEndpoint implements Server {
 
     private final EventLoopGroup worker = workerEventLoopGroup();
 
+    private volatile io.netty.channel.Channel channel;
+
+    public NettyServer() {
+        this(NettyResources.randomPort());
+    }
+
+    public NettyServer(Integer port) {
+        this(NettyConstants.LOCALHOST_STR, port);
+    }
+
     public NettyServer(String ip, Integer port) {
         this(new NetworkAddress(ip, port));
     }
 
     public NettyServer(NetworkAddress bindAddress) {
         super(bindAddress);
+        initServerBootstrap();
     }
 
     @Override
@@ -50,57 +72,76 @@ public class NettyServer extends AbstractEndpoint implements Server {
 
     @Override
     public void start() {
+        String host = address.getIp();
         Integer port = address.getPort();
         try {
-            serverBootstrap.channel(serverChannelClass())
-                    .group(boss, worker)
-                    .option(ChannelOption.SO_BACKLOG, 1024)
-                    .childOption(ChannelOption.TCP_NODELAY, true)
-                    .handler(new ChannelInitializer<ServerSocketChannel>() {
-
-                        @Override
-                        protected void initChannel(ServerSocketChannel ch) throws Exception {
-                            ChannelPipeline pipeline = ch.pipeline();
-                            pipeline.addLast(nettyServerHandler);
+            ChannelFuture bindFuture = serverBootstrap.bind(host, port).sync().addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if (future.isDone()) {
+                        if (future.isSuccess()) {
+                            log.info("[NettyServer] Bootstrapping done. Binding {}", address);
+                        } else if (Objects.nonNull(future.cause())) {
+                            log.error("[NettyServer] Bootstrapping error. Binding {}", address, future.cause());
                         }
-                    })
-                    .childHandler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        protected void initChannel(SocketChannel ch) throws Exception {
-                            ChannelPipeline pipeline = ch.pipeline();
-                            pipeline.addLast(new NettyMessageEncoder());
-                            pipeline.addLast(new NettyMessageDecoder());
-                            pipeline.addLast(new NettyServerHandler());
-                            pipeline.addLast(new EchoMsgHandler());
-                        }
-                    });
-
-            ChannelFuture bindFuture = serverBootstrap.bind(port)
-                    .sync();
-            bindFuture.channel().closeFuture().sync();
+                    }
+                }
+            });
+            this.channel = bindFuture.channel();
+            // wait for closing.
+            this.channel.closeFuture().sync();
         } catch (Exception e) {
-            System.err.println("Error creating server binding {" + port + "}");
-            e.printStackTrace();
-        } finally {
-            // todo: shutdownHook or finally ?
-            boss.shutdownGracefully();
-            worker.shutdownGracefully();
+            log.error("[NettyServer] Error creating server binding {}", address, e);
         }
     }
 
     @Override
     public void shutdown() {
+        try {
+            for (Channel established : channels()) {
+                established.shutdown();
+            }
+            channel.close();
+        } finally {
+            boss.shutdownGracefully();
+            worker.shutdownGracefully();
+        }
+    }
 
+    // modify the return type. cast to NettyChannel
+    @Override
+    public Collection<NettyChannel> channels() {
+        return nettyChannelManager.nettyChannels();
     }
 
     @Override
-    public Collection<Channel> channels() {
+    public Channel fetchChannel(Predicate<? super Channel> condition) {
+        for (Channel channel : channels()) {
+            if (condition.test(channel)) {
+                return channel;
+            }
+        }
         return null;
     }
 
-    @Override
-    public Channel fetchChannel(Predicate<?> condition) {
-        return null;
+    private void initServerBootstrap() {
+        serverBootstrap.channel(serverChannelClass())
+                .group(boss, worker)
+                .option(ChannelOption.SO_REUSEADDR, true)
+                .childOption(ChannelOption.TCP_NODELAY, Boolean.TRUE)
+                .childOption(ChannelOption.SO_KEEPALIVE, NettyEnvironment.channelKeepAlive())
+                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        ChannelPipeline pipeline = ch.pipeline();
+                        // todo: 业务上的 ServerHandler
+                        pipeline.addLast(new NettyMessageEncoder(),
+                                new NettyMessageDecoder(),
+                                new IdleStateHandler(0, 0, 1, TimeUnit.MINUTES),
+                                nettyChannelManager);
+                    }
+                });
     }
 
     private static Class<? extends ServerChannel> serverChannelClass() {
@@ -110,18 +151,13 @@ public class NettyServer extends AbstractEndpoint implements Server {
     }
 
     private static EventLoopGroup bossEventLoopGroup() {
-        return decideEventLoopGroup(1);
+        return NettyResources.bossEventLoopGroup(NettyEnvironment.bossEventLoopGroupThreads(),
+                "NettyServer-BossThread");
     }
 
     private static EventLoopGroup workerEventLoopGroup() {
-        return decideEventLoopGroup(NettyEnvironment.workerEventLoopThreadNumber());
+        return NettyResources.workerEventLoopGroup(NettyEnvironment.workerEventLoopGroupThreads(),
+                "NettyServer-WorkerThread");
     }
-
-    private static EventLoopGroup decideEventLoopGroup(final int nThread) {
-        return useEpoll ?
-                new EpollEventLoopGroup(nThread) :
-                new NioEventLoopGroup(nThread);
-    }
-
 
 }

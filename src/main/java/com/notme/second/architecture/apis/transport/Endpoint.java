@@ -16,4 +16,6 @@ public interface Endpoint {
 
     void shutdown();
 
+    void send(Object msg);
+
 }

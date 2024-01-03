@@ -5,18 +5,18 @@ import lombok.Getter;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.Objects;
 import java.util.function.Function;
 
 /**
  * @author monstaxl
+ * todo: 有没有必要保留这个呢，我的想法是后面不知道会不会加一些什么属性上去
  **/
 @Getter
 public class NetworkAddress implements Serializable {
 
     private static final long serialVersionUID = -99988776664L;
 
-    // todo: 这里我的想法是，对通用的函数进行抽象比较好，不然的话，在类中自定义方法可能会是更加直观优雅的方式
-    //          后续如果有全局的通用函数，我留了一个 GlobalFunctions类，应该会用泛型或者什么全部放在里面
     private static final Function<NetworkAddress, String> addressToString = na -> na.getIp() + ":" + na.getPort();
 
     private final String ip;
@@ -44,4 +44,34 @@ public class NetworkAddress implements Serializable {
         return this.getIp() + ":" + this.port;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (Objects.isNull(o)) {
+            return false;
+        }
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof NetworkAddress)) {
+            return false;
+        }
+        NetworkAddress that = (NetworkAddress) o;
+        if (Objects.isNull(that.ip) || Objects.isNull(that.port)) {
+            return false;
+        }
+        return that.port.equals(this.port)
+                && that.ip.equals(this.ip);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIp(), getPort());
+    }
+
+    @Override
+    public String toString() {
+        return "NetworkAddress{" +
+                ip + ":" + port +
+                '}';
+    }
 }

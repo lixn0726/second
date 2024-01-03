@@ -1,8 +1,5 @@
 package com.notme.second.architecture.apis.transport;
 
-import com.notme.second.architecture.NetworkAddress;
-import io.netty.channel.Channel;
-
 import java.util.Collection;
 import java.util.function.Predicate;
 
@@ -11,8 +8,14 @@ import java.util.function.Predicate;
  **/
 public interface Server extends Endpoint {
 
-    Collection<Channel> channels();
+    Collection<? extends Channel> channels();
 
-    // todo: Predicate的泛型需要给个具体的定义，不然API都不好写
-    Channel fetchChannel(Predicate<?> condition);
+    Channel fetchChannel(Predicate<? super Channel> condition);
+
+    // todo: 添加具体实现
+    default void send(Object msg) {}
+
+    default void send(Object msg, Channel channel) {};
+
+    default void send(Object msg, Collection<Channel> channels) {};
 }
