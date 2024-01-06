@@ -2,9 +2,12 @@ package com.notme.second.architecture.netty;
 
 import com.notme.second.architecture.NetworkAddress;
 import com.notme.second.protocol.Message;
+import sun.misc.Unsafe;
 
-import javax.print.DocFlavor;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +26,9 @@ public class NettyComponentTest {
         System.out.println("NettyServer address: " + address);
 
         TimeUnit.SECONDS.sleep(3);
+
+        ByteBuffer buf = ByteBuffer.allocate(1024);
+
 
         System.out.println("启动Client");
         NettyClient client = new NettyClient(address);
